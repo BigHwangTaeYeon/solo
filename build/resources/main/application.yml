@@ -1,0 +1,57 @@
+#spring.application.name=solo
+server:
+  port: 8443
+  ssl:
+    enabled: true
+    key-store: /Users/bighwang/Documents/workspace/solo/src/main/java/resources/solo_ssl.jks
+    key-store-password: sololocalhostssl
+    key-store-type: JKS
+    key-alias: solo_localhost_ssl
+  http:
+    port: 8080
+
+spring:
+  datasource:
+    url: jdbc:mariadb://localhost:3306/solo     #{????????::????? mystudy}
+    username: solo
+    password: solo
+    driver-class-name: org.mariadb.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+  thymeleaf:
+    enabled: true
+    prefix: classpath:templates/content/
+    suffix: .html
+    cache: false
+    encoding: UTF-8
+    mode: HTML
+    check-template: true
+    check-template-location: true
+#  thymeleaf:
+#    prefix : classpath:templates/content/
+#    suffix : .html
+#    cache : false
+
+#  # application.properties ??
+## thymeleaf ?? ??
+#  spring.thymeleaf.enabled=true
+#  # template ?? ???
+#  spring.thymeleaf.prefix=classpath:/templates/
+#  # template ?? ???
+#  spring.thymeleaf.suffix=.html
+#  # cache ??? ??, ??????? ? ???
+#  spring.thymeleaf.cache=true;
+#  # template ???
+#  spring.thymeleaf.encoding=UTF-8
+#  #?? template ??, TemplateMode? ?? (HTML, XML, TEXT, JAVASCRIPT ?)
+#  spring.thymeleaf.mode=HTML?
+#  # ??? ?? template ?? ?? ??
+#  spring.thymeleaf.check-template=true
+#  # template ?? ?? ?? ??
+#  spring.thymeleaf.check-template-location=true
+
+

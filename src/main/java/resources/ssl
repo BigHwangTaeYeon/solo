@@ -1,0 +1,4 @@
+keytool -genkey -alias solo_localhost_ssl -keyalg RSA -keysize 2048 -validity 700 -keypass sololocalhostssl -storepass sololocalhostssl -keystore solo_ssl.jks
+
+다음에 대해 유효 기간이 700일인 2,048비트 RSA 키 쌍 및 자체 서명된 인증서(SHA256withRSA)를 생성하는 중
+: CN=test, OU=test, O=test, L=test, ST=test, C=11
