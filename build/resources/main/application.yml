@@ -11,20 +11,20 @@ server:
     port: 8080
 
 spring:
-  datasource:
-    url: jdbc:mariadb://localhost:3306/solo     #{????????::????? mystudy}
-    username: solo
-    password: solo
-    driver-class-name: org.mariadb.jdbc.Driver
-  jpa:
-    hibernate:
-      ddl-auto: create
-    properties:
-      hibernate:
-        format_sql: true
+#  datasource:
+#    url: jdbc:mariadb://localhost:3306/solo     #{????????::????? mystudy}
+#    username: solo
+#    password: solo
+#    driver-class-name: org.mariadb.jdbc.Driver
+#  jpa:
+#    hibernate:
+#      ddl-auto: create
+#    properties:
+#      hibernate:
+#        format_sql: true
   thymeleaf:
     enabled: true
-    prefix: classpath:templates/content/
+    prefix: classpath:templates/
     suffix: .html
     cache: false
     encoding: UTF-8
@@ -55,3 +55,7 @@ spring:
 #  spring.thymeleaf.check-template-location=true
 
 
+
+logging:
+  level:
+    org.springframework: info
