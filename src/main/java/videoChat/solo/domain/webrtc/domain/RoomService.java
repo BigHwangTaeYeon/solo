@@ -1,7 +1,7 @@
-package videoChat.solo.webrtc.domain;
+package videoChat.solo.domain.webrtc.domain;
 
 //import io.github.benkoff.webrtcss.util.Parser;
-import videoChat.solo.webrtc.util.Parser;
+import videoChat.solo.domain.webrtc.util.Parser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.WebSocketSession;

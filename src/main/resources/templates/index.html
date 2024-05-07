@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>화상 채팅 메인 페이지</title>
+    <style>
+        body {
+          font-family: 'Noto Sans KR', sans-serif;
+          margin: 0;
+          padding: 0;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100vh;
+          background-color: #f9f9f9;
+        }
+        .btn-group {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+        .btn {
+          margin-bottom: 20px;
+          padding: 15px 30px;
+          font-size: 18px;
+          text-decoration: none;
+          background-color: #4CAF50;
+          color: #fff;
+          border: none;
+          border-radius: 30px;
+          cursor: pointer;
+          box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+          transition: all 0.3s ease;
+        }
+        .btn:hover {
+          background-color: #45a049;
+          transform: translateY(-3px);
+          box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2);
+        }
+        .btn:active {
+          transform: translateY(1px);
+          box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        .header {
+          position: absolute;
+          top: 20px;
+          right: 20px;
+        }
+        h1 {
+          font-size: 42px;
+          margin-bottom: 30px;
+          color: #333;
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <a th:href="@{/login}" class="btn">로그인</a>
+    <a th:href="@{/register}" class="btn">회원가입</a>
+</div>
+<div class="btn-group">
+    <h1>1:1 화상 채팅</h1>
+    <a th:href="@{/video}" class="btn">랜덤 채팅</a>
+    <a href="#" class="btn">버튼2</a>
+    <a href="#" class="btn">버튼3</a>
+</div>
+</body>
+</html>

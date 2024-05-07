@@ -1,4 +1,4 @@
-package videoChat.solo.webrtc.domain;
+package videoChat.solo.domain.webrtc.domain;
 
 import java.util.Objects;
 

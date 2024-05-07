@@ -1,4 +1,4 @@
-package videoChat.solo.webrtc.domain;
+package videoChat.solo.domain.webrtc.domain;
 
 //import org.antlr.v4.runtime.misc.NotNull;
 import org.springframework.web.socket.WebSocketSession;
@@ -22,7 +22,7 @@ public class Room {
         return id;
     }
 
-    Map<String, WebSocketSession> getClients() {
+    public Map<String, WebSocketSession> getClients() {
         return clients;
     }
 

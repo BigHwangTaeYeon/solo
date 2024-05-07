@@ -1,15 +1,16 @@
-package videoChat.solo.webrtc.config;
+package videoChat.solo.domain.webrtc.config;
 
 //import io.github.benkoff.webrtcss.socket.SignalHandler;
-import videoChat.solo.webrtc.socket.SignalHandlerSocket;
+import org.springframework.web.socket.config.annotation.EnableWebSocket;
+import videoChat.solo.domain.webrtc.socket.SignalHandlerSocket;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
-import org.springframework.web.socket.server.standard.ServletServerContainerFactoryBean;
 
 @Configuration
+@EnableWebSocket
 public class WebSocketConfig implements WebSocketConfigurer {
 
     @Override

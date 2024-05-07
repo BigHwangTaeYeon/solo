@@ -1,12 +1,12 @@
-package videoChat.solo.webrtc.socket;
+package videoChat.solo.domain.webrtc.socket;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 //import io.github.benkoff.webrtcss.domain.Room;
 //import io.github.benkoff.webrtcss.domain.RoomService;
 //import io.github.benkoff.webrtcss.domain.WebSocketMessage;
-import videoChat.solo.webrtc.domain.Room;
-import videoChat.solo.webrtc.domain.RoomService;
-import videoChat.solo.webrtc.domain.WebSocketMessage;
+import videoChat.solo.domain.webrtc.domain.Room;
+import videoChat.solo.domain.webrtc.domain.RoomService;
+import videoChat.solo.domain.webrtc.domain.WebSocketMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
