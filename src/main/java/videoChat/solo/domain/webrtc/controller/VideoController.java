@@ -23,24 +23,31 @@ public class VideoController {
         this.mainService = mainService;
     }
 
-    @GetMapping({"/video"})
+    @GetMapping("/randomChat")
+    public String randomChat(final Long id, final String uuid) {
+        Model model = new ExtendedModelMap();
+        model.addAllAttributes(mainService.displayMainPage(id, uuid));
+        return "video/rtc/" + Objects.requireNonNull(model.getAttribute("page")).toString();
+    }
+
+    @GetMapping("/video")
     public String displayMainPage(final Long id, final String uuid) {
         Model model = new ExtendedModelMap();
         model.addAllAttributes(mainService.displayMainPage(id, uuid));
-        return Objects.requireNonNull(model.getAttribute("page")).toString();
+        return "video/rtc/" + Objects.requireNonNull(model.getAttribute("page")).toString();
     }
 
     @PostMapping(value = "/room", params = "action=create")
     public String processRoomSelection(
             Model model, @ModelAttribute("id") final String sid, @ModelAttribute("uuid") final String uuid, final BindingResult binding) {
         model.addAllAttributes(mainService.processRoomSelection(sid, uuid, binding));
-        return Objects.requireNonNull(model.getAttribute("page")).toString();
+        return "video/rtc/" + Objects.requireNonNull(model.getAttribute("page")).toString();
     }
 
     @GetMapping("/room/{sid}/user/{uuid}")
     public String displaySelectedRoom(Model model, @PathVariable("sid") final String sid, @PathVariable("uuid") final String uuid) {
         model.addAllAttributes(mainService.displaySelectedRoom(sid, uuid));
-        return Objects.requireNonNull(model.getAttribute("page")).toString();
+        return "video/rtc/" + Objects.requireNonNull(model.getAttribute("page")).toString();
     }
 
     @GetMapping("/room/{sid}/user/{uuid}/exit")
@@ -52,17 +59,17 @@ public class VideoController {
     @GetMapping("/room/random")
     public String requestRandomRoomNumber(Model model, @ModelAttribute("uuid") final String uuid) {
         model.addAllAttributes(mainService.requestRandomRoomNumber(uuid));
-        return Objects.requireNonNull(model.getAttribute("page")).toString();
+        return "video/rtc/" + Objects.requireNonNull(model.getAttribute("page")).toString();
     }
 
     @GetMapping("/offer")
     public String displaySampleSdpOffer() {
-        return "sdp_offer";
+        return "video/rtc/sdp_offer";
     }
 
     @GetMapping("/stream")
     public String displaySampleStreaming() {
-        return "streaming";
+        return "video/rtc/streaming";
     }
 
 //    @GetMapping({"", "/", "/index", "/home", "/main"})

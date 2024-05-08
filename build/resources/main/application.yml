@@ -11,6 +11,18 @@ server:
     port: 8080
 
 spring:
+  datasource:
+    url: jdbc:h2:tcp://localhost/~/solo
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
 #  datasource:
 #    url: jdbc:mariadb://localhost:3306/solo     #{????????::????? mystudy}
 #    username: solo
@@ -24,37 +36,22 @@ spring:
 #        format_sql: true
   thymeleaf:
     enabled: true
-    prefix: classpath:templates/
+    prefix: file:src/main/resources/templates/
     suffix: .html
     cache: false
     encoding: UTF-8
     mode: HTML
     check-template: true
     check-template-location: true
-#  thymeleaf:
-#    prefix : classpath:templates/content/
-#    suffix : .html
-#    cache : false
 
-#  # application.properties ??
-## thymeleaf ?? ??
-#  spring.thymeleaf.enabled=true
-#  # template ?? ???
-#  spring.thymeleaf.prefix=classpath:/templates/
-#  # template ?? ???
-#  spring.thymeleaf.suffix=.html
-#  # cache ??? ??, ??????? ? ???
-#  spring.thymeleaf.cache=true;
-#  # template ???
-#  spring.thymeleaf.encoding=UTF-8
-#  #?? template ??, TemplateMode? ?? (HTML, XML, TEXT, JAVASCRIPT ?)
-#  spring.thymeleaf.mode=HTML?
-#  # ??? ?? template ?? ?? ??
-#  spring.thymeleaf.check-template=true
-#  # template ?? ?? ?? ??
-#  spring.thymeleaf.check-template-location=true
-
-
+jwt:
+  secret: 63fba97a41e0d004e10e8dbbcb9a547819280efb00a54c732aca36a8a58258e4fcc539ffc5159a7f0a7be78b86efe001c12ba6af6debeb0a89e8ce7e82e75455
+  access:
+    expiration: 800
+    header: Authorization
+  refresh:
+    expiration: 900
+    header: Authorization-refresh
 
 logging:
   level:
