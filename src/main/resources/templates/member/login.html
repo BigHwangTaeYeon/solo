@@ -68,9 +68,9 @@
 <body>
 <div class="container">
     <h1>로그인</h1>
-    <form>
-        <label for="username">사용자 이름 또는 이메일:</label>
-        <input type="text" id="username" name="username" required>
+    <form id="signInForm">
+        <label for="email">사용자 이름 또는 이메일:</label>
+        <input type="text" id="email" name="email" required>
 
         <label for="password">비밀번호:</label>
         <input type="password" id="password" name="password" required>
@@ -81,5 +81,32 @@
         아직 계정이 없으신가요? <a th:href="@{/register}">회원가입</a>
     </div>
 </div>
+
+<script>
+    document.getElementById("signInForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+      var formData = {
+        email: document.getElementById("email").value,
+        password: document.getElementById("password").value
+      };
+      fetch("/signIn", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(formData)
+      }).then(function(response) {
+        if (response.ok) {
+          var token = response.headers.get("Authorization");
+          localStorage.setItem("token", token);
+          window.location.href = "/"; // 로그인 성공 시 메인 페이지로 이동
+        } else {
+          alert("로그인에 실패했습니다.");
+        }
+      }).catch(function(error) {
+        console.error("Error:", error);
+      });
+    });
+</script>
 </body>
 </html>

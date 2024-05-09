@@ -48,7 +48,6 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
                 .filter(jwtService::isTokenValid)
                 .orElse(null); //2
 
-
         if(refreshToken != null){
             checkRefreshTokenAndReIssueAccessToken(response, refreshToken);//3
             return;
@@ -78,7 +77,6 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         UserDetailsImpl userDetails = new UserDetailsImpl(users);
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null,authoritiesMapper.mapAuthorities(userDetails.getAuthorities()));
-
 
         SecurityContext context = SecurityContextHolder.createEmptyContext();//5
         context.setAuthentication(authentication);

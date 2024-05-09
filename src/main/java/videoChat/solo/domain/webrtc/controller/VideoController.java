@@ -23,10 +23,20 @@ public class VideoController {
         this.mainService = mainService;
     }
 
-    @GetMapping("/randomChat")
-    public String randomChat(final Long id, final String uuid) {
-        Model model = new ExtendedModelMap();
-        model.addAllAttributes(mainService.displayMainPage(id, uuid));
+//    @GetMapping("/room/random")
+//    public String requestRandomRoomNumber(Model model, @ModelAttribute("uuid") final String uuid) {
+//        model.addAllAttributes(mainService.requestRandomRoomNumber(uuid));
+//        return "video/rtc/" + Objects.requireNonNull(model.getAttribute("page")).toString();
+//    }
+    @GetMapping("/randomChat/{uuid}")
+    public String randomChat(Model model, @PathVariable("uuid") final String uuid) {
+        if(Math.random() * 10 + 1 > 5) {
+            // create room
+            model.addAllAttributes(mainService.createRoom(uuid));
+        } else {
+            // connect room | 방이 없으면 생성으로 변경
+            model.addAllAttributes(mainService.connectRoom(uuid));
+        }
         return "video/rtc/" + Objects.requireNonNull(model.getAttribute("page")).toString();
     }
 

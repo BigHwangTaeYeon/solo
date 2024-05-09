@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+import videoChat.solo.domain.users.entity.UserDetailsImpl;
 import videoChat.solo.domain.users.jwt.JwtService;
 import videoChat.solo.domain.users.repository.UsersRepository;
 
@@ -43,7 +44,7 @@ public class LoginSuccessJWTProvideHandler extends SimpleUrlAuthenticationSucces
     }
 
     private String extractEmail(Authentication authentication) {
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        UserDetails userDetails = (UserDetailsImpl) authentication.getPrincipal();
         return userDetails.getUsername();
     }
 }

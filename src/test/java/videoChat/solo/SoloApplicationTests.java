@@ -27,4 +27,15 @@ class SoloApplicationTests {
 
 		System.out.println("websocket bean : " + applicationContext.getBean(WebSocketConfig.class).signalHandler());
 	}
+
+	@Test
+	public void randomTest() throws Exception {
+	    // given
+		for(int i=0; i<100; i ++) {
+			int a = (int) (Math.random() * 10 + 1);
+			System.out.println("a = " + a);
+		}
+	    // when
+	    // then
+	}
 }

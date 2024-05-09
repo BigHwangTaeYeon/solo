@@ -1,7 +1,7 @@
 package videoChat.solo.domain.users.dto;
 
-import jakarta.persistence.Column;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 
 @Getter
@@ -14,6 +14,6 @@ public class UserDto {
 
     private String password;
 
-    private String confirm_password;
+    private String confirmPassword;
 
 }

@@ -1,6 +1,5 @@
 package videoChat.solo.domain.users.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -10,8 +9,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import videoChat.solo.domain.users.dto.UserDto;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
@@ -73,6 +70,6 @@ public class Users {
 
     //== 패스워드 암호화 ==//
     public void encodePassword(PasswordEncoder passwordEncoder){
-        this.password = passwordEncoder.encode(password);
+        this.password = "{bcrypt}" + passwordEncoder.encode(password);
     }
 }

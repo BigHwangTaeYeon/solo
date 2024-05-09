@@ -35,6 +35,12 @@ public class RoomService {
         return rooms.add(room);
     }
 
+    public Optional<Room> findSizeOneRoom() {
+        return rooms.stream()
+                .filter(sizeOne -> sizeOne.getClients().size() == 1)
+                .findAny();
+    }
+
     public Optional<Room> findRoomByStringId(final String sid) {
         // simple get() because of parser errors handling
         return rooms.stream().filter(r -> r.getId().equals(parser.parseId(sid).get())).findAny();

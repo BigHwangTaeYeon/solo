@@ -33,6 +33,11 @@ public class SecurityConfig {
     private final UsersRepository usersRepository;
     private final JwtService jwtService;
 
+    private final String[] allowedUrls = {
+            "/", "/main", "/signIn", "/signUp", "/register", "/login", "/h2-console/**"
+            , "/**"
+    };
+
     public SecurityConfig(UserDetailsServiceImpl userDetailsService, ObjectMapper objectMapper, UsersRepository usersRepository, JwtService jwtService) {
         this.userDetailsService = userDetailsService;
         this.objectMapper = objectMapper;
@@ -49,19 +54,8 @@ public class SecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorizeRequest ->
                         authorizeRequest
-                                .requestMatchers(
-                                        // 접근 제한
-                                        AntPathRequestMatcher.antMatcher("/auth/**")
-                                ).authenticated()
-                                .requestMatchers(
-                                        // 접근 제한 해제
-                                        AntPathRequestMatcher.antMatcher("/h2-console/**") ,
-                                        AntPathRequestMatcher.antMatcher("/register") ,
-                                        AntPathRequestMatcher.antMatcher("/main") ,
-                                        AntPathRequestMatcher.antMatcher("/") ,
-                                        AntPathRequestMatcher.antMatcher("/**")
-                                        // 회원가입 로그인 랜덤채팅 커뮤니티 접근 제한 해제 필요
-                                ).permitAll()
+                                .requestMatchers(allowedUrls).permitAll() // 접근 제한 해제
+                                .anyRequest().authenticated()
                 )
                 .logout((logout) -> logout
                         .logoutSuccessUrl("/signIn")

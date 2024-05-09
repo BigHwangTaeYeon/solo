@@ -99,7 +99,6 @@ public class JwtServiceImpl implements JwtService {
         Map<String, String> tokenMap = new HashMap<>();
         tokenMap.put(ACCESS_TOKEN_SUBJECT, accessToken);
         tokenMap.put(REFRESH_TOKEN_SUBJECT, refreshToken);
-
     }
 
     @Override
