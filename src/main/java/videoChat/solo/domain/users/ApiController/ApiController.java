@@ -27,13 +27,4 @@ public class ApiController {
         userDetailsService.save(userDto);
         return null;
     }
-
-    @PostMapping(value = "/test")
-    public ResponseEntity<?> test(@RequestBody UserDto userDto, HttpServletRequest request){
-
-        jwtService.isTokenValid(jwtService.extractAccessToken(request).orElseThrow());
-
-        return null;
-    }
-
 }

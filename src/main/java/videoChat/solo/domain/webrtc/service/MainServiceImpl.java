@@ -1,8 +1,5 @@
 package videoChat.solo.domain.webrtc.service;
 
-//import io.github.benkoff.webrtcss.domain.Room;
-//import io.github.benkoff.webrtcss.domain.RoomService;
-//import io.github.benkoff.webrtcss.util.Parser;
 import videoChat.solo.domain.webrtc.domain.Room;
 import videoChat.solo.domain.webrtc.util.Parser;
 import videoChat.solo.domain.webrtc.domain.RoomService;
@@ -109,75 +106,4 @@ public class MainServiceImpl {
         return result;
     }
 
-//    @Override
-//    public ModelAndView displayMainPage(Model model, final Long id, final String uuid) {
-//        final ModelAndView modelAndView = new ModelAndView("main");
-//        modelAndView.addObject("id", id);
-//        modelAndView.addObject("rooms", roomService.getRooms());
-//        modelAndView.addObject("uuid", uuid);
-//
-//        return modelAndView;
-//    }
-//
-//    @Override
-//    public ModelAndView processRoomSelection(final String sid, final String uuid, final BindingResult bindingResult) {
-//        if (bindingResult.hasErrors()) {
-//            // simplified version, no errors processing
-//            return new ModelAndView(REDIRECT);
-//        }
-//        Optional<Long> optionalId = parser.parseId(sid);
-//        optionalId.ifPresent(id -> Optional.ofNullable(uuid).ifPresent(name -> roomService.addRoom(new Room(id))));
-//
-//        return this.displayMainPage(model, optionalId.orElse(null), uuid);
-//    }
-//
-//    @Override
-//    public ModelAndView displaySelectedRoom(final String sid, final String uuid) {
-//        // redirect to main page if provided data is invalid
-//        ModelAndView modelAndView = new ModelAndView(REDIRECT);
-//
-//        if (parser.parseId(sid).isPresent()) {
-//            Room room = roomService.findRoomByStringId(sid).orElse(null);
-//            // client size < 2 추가, 3명 이상 참여 불가
-//            // 동시성 문제 추가 해야함
-////            if(room != null && uuid != null && !uuid.isEmpty() && room.getClients().size() < 2 ) {
-////                logger.debug("User {} is going to join Room #{}", uuid, sid);
-////                // open the chat room
-////                modelAndView = new ModelAndView("chat_room", "id", sid);
-////                modelAndView.addObject("uuid", uuid);
-////            }
-//            // 위에는 기존 코드, 아래는 동시성 해결
-//            modelAndView = validationRoom(modelAndView, room, sid, uuid);
-//        }
-//
-//        return modelAndView;
-//    }
-//
-//    @Override
-//    public ModelAndView processRoomExit(final String sid, final String uuid) {
-//        if(sid != null && uuid != null) {
-//            logger.debug("User {} has left Room #{}", uuid, sid);
-//            // implement any logic you need
-//        }
-//        return new ModelAndView(REDIRECT);
-//    }
-//
-//    @Override
-//    public ModelAndView requestRandomRoomNumber(final String uuid) {
-//        return this.displayMainPage(model, randomValue(), uuid);
-//    }
-//
-//    private Long randomValue() {
-//        return ThreadLocalRandom.current().nextLong(0, 100);
-//    }
-//
-//    private synchronized ModelAndView validationRoom(ModelAndView modelAndView, Room room, String sid, String uuid) {
-//        if(room != null && uuid != null && !uuid.isEmpty() && room.getClients().size() < 2 ) {
-//            logger.debug("User {} is going to join Room #{}", uuid, sid);
-//            // open the chat room
-//            modelAndView = new ModelAndView("chat_room", "id", sid);
-//            modelAndView.addObject("uuid", uuid);
-//        }
-//        return modelAndView;
-//    }
 }

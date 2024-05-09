@@ -1,15 +1,12 @@
 package videoChat.solo.domain.webrtc.domain;
 
-//import org.antlr.v4.runtime.misc.NotNull;
 import org.springframework.web.socket.WebSocketSession;
 
-//import javax.validation.constraints.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 public class Room {
-//    @NotNull
     private final Long id;
     // sockets by user names
     private final Map<String, WebSocketSession> clients = new HashMap<>();
