@@ -26,9 +26,4 @@ function addUuidToButtonLink(button) {
 function connectVideoChat() {
     let ref = document.getElementById("video").href;
     document.getElementById("video").href = ref + "/" + localStorage.getItem("uuid");
-
-//    let id = 'button-link-' + button.value;
-//    let ref = document.getElementById(id).href;
-//    document.getElementById(id).href = ref + "/" + localStorage.getItem("uuid");
-//    console.log("link.href:" + document.getElementById(id).href);
 }

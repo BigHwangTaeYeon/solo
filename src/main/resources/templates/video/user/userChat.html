@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SNS Style List</title>
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            position: relative; /* 부모 요소로 설정하여 자식 요소를 절대 위치시킬 수 있게 함 */
+        }
+
+        .total-rooms {
+            font-size: 16px;
+            color: #666;
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .room-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .room-item {
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .room-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .room-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .logout-button {
+            background-color: #ff5555;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            position: absolute; /* 절대 위치로 설정 */
+            top: 20px; /* 상단 여백 */
+            right: 20px; /* 우측 여백 */
+        }
+
+        .logout-button:hover {
+            background-color: #cc0000;
+        }
+
+        /* 모달 스타일 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            border-radius: 5px;
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+
+        .modal-button {
+            background-color: #55aaff;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .modal-button:hover {
+            background-color: #0077cc;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="total-rooms" th:text="'총 방 개수: ' + ${count} + ' 개'"></div>
+
+    <button class="create-room-button" onclick="openModal()">방 만들기</button>
+
+    <ul class="room-list">
+        <li th:each="room : ${list}">
+            <div class="room-item">
+                <a class="room-link" th:text="${room.name}" th:href="@{'/connectUserChat/' + ${room.id}}"></a>
+                <!-- 다른 방 정보를 여기에 추가할 수 있습니다. -->
+            </div>
+        </li>
+    </ul>
+
+    <button class="logout-button" onclick="logout()">로그아웃</button>
+</div>
+
+<!-- 모달 -->
+<div id="myModal" class="modal">
+    <div class="modal-content">
+        <input id="titleInput" class="modal-input" type="text" placeholder="방 제목을 입력하세요">
+        <button class="modal-button" onclick="createRoom()">방 만들기</button>
+    </div>
+</div>
+
+<script>
+// 모달 열기
+function openModal() {
+    document.getElementById('myModal').style.display = 'block';
+}
+
+// 모달 닫기
+window.onclick = function(event) {
+    var modal = document.getElementById('myModal');
+    if (event.target === modal) {
+        modal.style.display = 'none';
+    }
+};
+
+// 방 만들기
+function createRoom() {
+    var title = document.getElementById('titleInput').value;
+    if (!title) {
+        alert("방 제목을 입력하세요.");
+        return;
+    }
+    var token = localStorage.getItem('token');
+    if (!token) {
+        alert("로그인 후 이용해주세요.");
+        return;
+    }
+
+    fetch('/createUserChat?title=' + encodeURIComponent(title), {
+        method: 'GET',
+        headers: {
+            'Authorization': 'Bearer ' + token
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('방 생성에 실패했습니다.');
+        }
+        return response.text();
+    })
+    .then(redirectUrl => {
+        // 받은 URL로 페이지 이동
+        window.location.href = /*[[${redirectUrl}]]*/ '';;
+    })
+    .catch(error => {
+        console.error('오류 발생:', error);
+        alert('방 생성에 실패했습니다.');
+    });
+}
+
+function logout() {
+    localStorage.removeItem('token');
+    console.log("로그아웃 되었습니다.");
+    window.location.href = "/";
+}
+</script>
+
+</body>
+</html>

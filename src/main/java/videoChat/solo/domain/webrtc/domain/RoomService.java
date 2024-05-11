@@ -5,12 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.WebSocketSession;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class RoomService {    
@@ -34,10 +30,10 @@ public class RoomService {
         return rooms.add(room);
     }
 
-    public Optional<Room> findSizeOneRoom() {
+    public Set<Room> findSizeOneRoom() {
         return rooms.stream()
-                .filter(sizeOne -> sizeOne.getClients().size() == 1)
-                .findAny();
+                .filter(r -> r.getClients().size() == 1)
+                .collect(Collectors.toSet());
     }
 
     public Optional<Room> findRoomByStringId(final String sid) {

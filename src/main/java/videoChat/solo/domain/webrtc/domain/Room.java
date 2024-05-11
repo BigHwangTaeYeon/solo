@@ -1,13 +1,18 @@
 package videoChat.solo.domain.webrtc.domain;
 
+import lombok.Getter;
 import org.springframework.web.socket.WebSocketSession;
+import videoChat.solo.domain.users.dto.UserDto;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+@Getter
 public class Room {
     private final Long id;
+    private String userEmail;
+    private String title;
     // sockets by user names
     private final Map<String, WebSocketSession> clients = new HashMap<>();
 
@@ -15,12 +20,10 @@ public class Room {
         this.id = id;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public Map<String, WebSocketSession> getClients() {
-        return clients;
+    public Room(Long id, UserDto dto, String title) {
+        this.id = id;
+        this.userEmail = dto.getEmail();
+        this.title = title;
     }
 
     @Override
@@ -34,7 +37,6 @@ public class Room {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(getId(), getClients());
     }
 }

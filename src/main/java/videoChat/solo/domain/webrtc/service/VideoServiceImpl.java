@@ -1,31 +1,35 @@
 package videoChat.solo.domain.webrtc.service;
 
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.util.StringUtils;
+import videoChat.solo.domain.users.dto.UserDto;
+import videoChat.solo.domain.users.jwt.JwtServiceImpl;
 import videoChat.solo.domain.webrtc.domain.Room;
 import videoChat.solo.domain.webrtc.util.Parser;
 import videoChat.solo.domain.webrtc.domain.RoomService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 @Service
-public class MainServiceImpl {
+public class VideoServiceImpl {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private static final String REDIRECT = "redirect:/";
     
     private final RoomService roomService;
     private final Parser parser;
 
-    @Autowired
-    public MainServiceImpl(final RoomService roomService, final Parser parser) {
+    private final JwtServiceImpl jwtService;
+
+    public VideoServiceImpl(RoomService roomService, Parser parser, JwtServiceImpl jwtService) {
         this.roomService = roomService;
         this.parser = parser;
+        this.jwtService = jwtService;
     }
 
     public Map<String, Object> displayMainPage(final Long id, final String uuid) {
@@ -37,24 +41,57 @@ public class MainServiceImpl {
         return result;
     }
 
-    public Map<String, Object> createRoom(final String uuid) {
+    public Map<String, Object> createRandomRoom(final String uuid) {
         Long id = randomValue();
         roomService.addRoom(new Room(id));
         Room room = roomService.findRoomByStringId(String.valueOf(id)).orElse(null);
         return validationRoom(room, String.valueOf(id), uuid);
     }
 
-    public Map<String, Object> connectRoom(final String uuid) {
+    public synchronized Map<String, Object> connectRandomRoom(final String uuid) {
+        Optional<Room> findRoom = roomService.findSizeOneRoom()
+                .stream()
+                .filter(c -> !StringUtils.hasText(c.getUserEmail()))
+                .findAny();
         // size 가 1인 방을 찾아서 있으면 들어가고 없으면 생성하는 로직
-        if(roomService.findSizeOneRoom().isPresent()) {
-            Long id = roomService.findSizeOneRoom().get().getId();
+        if(findRoom.isPresent()) {
+            Long id = findRoom.get().getId();
             Room room = roomService.findRoomByStringId(String.valueOf(id)).orElse(null);
-
             return validationRoom(room, String.valueOf(id), uuid);
         } else {
-            return createRoom(uuid);
+            return createRandomRoom(uuid);
         }
     }
+
+    public Map<String, Object> findUserRoom() {
+        Set<Room> roomList = roomService.findSizeOneRoom();
+        Map<String, Object> result = new HashMap<>();
+        if(!roomList.isEmpty()) {
+            result.put("count", roomList.stream().filter(c -> StringUtils.hasText(c.getUserEmail())).count());
+            result.put("list", roomList.stream().filter(c -> StringUtils.hasText(c.getUserEmail())).collect(Collectors.toSet()));
+        }
+        return result;
+    }
+
+    public Map<String, Object> createUserChat(String title, HttpServletRequest request) {
+        Long id = randomValue();
+        String email = jwtService
+                        .extractEmail(jwtService.extractAccessToken(request).orElseThrow(IllegalAccessError::new))
+                        .orElseThrow(IllegalAccessError::new);
+        Room room = new Room(id, new UserDto(email), title);
+        roomService.addRoom(room);
+        return validationRoom(room, String.valueOf(id), email);
+    }
+
+    public Map<String, Object> findUserChat(Long id, String uuid, HttpServletRequest request) {
+        return validationRoom(
+                roomService.findRoomByStringId(String.valueOf(id)).orElse(null), String.valueOf(id), uuid
+        );
+    }
+
+
+
+
 
     public Map<String, Object> processRoomSelection(final String sid, final String uuid, final BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -94,7 +131,7 @@ public class MainServiceImpl {
         return ThreadLocalRandom.current().nextLong(0, 100);
     }
 
-    private synchronized Map<String, Object> validationRoom(Room room, String sid, String uuid) {
+    private Map<String, Object> validationRoom(Room room, String sid, String uuid) {
         Map<String, Object> result = new HashMap<>();
         if(room != null && uuid != null && !uuid.isEmpty() && room.getClients().size() < 2 ) {
             logger.debug("User {} is going to join Room #{}", uuid, sid);
@@ -105,5 +142,4 @@ public class MainServiceImpl {
         }
         return result;
     }
-
 }

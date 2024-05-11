@@ -16,4 +16,7 @@ public class UserDto {
 
     private String confirmPassword;
 
+    public UserDto(String email) {
+        this.email = email;
+    }
 }
