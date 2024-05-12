@@ -51,7 +51,7 @@ public class VideoServiceImpl {
     public synchronized Map<String, Object> connectRandomRoom(final String uuid) {
         Optional<Room> findRoom = roomService.findSizeOneRoom()
                 .stream()
-                .filter(c -> !StringUtils.hasText(c.getUserEmail()))
+                .filter(c -> !StringUtils.hasText(c.getUuid()))
                 .findAny();
         // size 가 1인 방을 찾아서 있으면 들어가고 없으면 생성하는 로직
         if(findRoom.isPresent()) {
@@ -67,16 +67,16 @@ public class VideoServiceImpl {
         Set<Room> roomList = roomService.findSizeOneRoom();
         Map<String, Object> result = new HashMap<>();
         if(!roomList.isEmpty()) {
-            result.put("count", roomList.stream().filter(c -> StringUtils.hasText(c.getUserEmail())).count());
-            result.put("list", roomList.stream().filter(c -> StringUtils.hasText(c.getUserEmail())).collect(Collectors.toSet()));
+            result.put("count", roomList.stream().filter(c -> StringUtils.hasText(c.getUuid())).count());
+            result.put("list", roomList.stream().filter(c -> StringUtils.hasText(c.getUuid())).collect(Collectors.toSet()));
         }
         return result;
     }
 
-    public Map<String, Object> createUserChat(String title, HttpServletRequest request) {
+    public Map<String, Object> createUserChat(String title, String token) {
         Long id = randomValue();
         String email = jwtService
-                        .extractEmail(jwtService.extractAccessToken(request).orElseThrow(IllegalAccessError::new))
+                        .extractEmail(token)
                         .orElseThrow(IllegalAccessError::new);
         Room room = new Room(id, new UserDto(email), title);
         roomService.addRoom(room);

@@ -1,9 +1,6 @@
 package videoChat.solo.domain.webrtc.socket;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-//import io.github.benkoff.webrtcss.domain.Room;
-//import io.github.benkoff.webrtcss.domain.RoomService;
-//import io.github.benkoff.webrtcss.domain.WebSocketMessage;
 import videoChat.solo.domain.webrtc.domain.Room;
 import videoChat.solo.domain.webrtc.domain.RoomService;
 import videoChat.solo.domain.webrtc.domain.WebSocketMessage;

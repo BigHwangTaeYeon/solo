@@ -38,13 +38,13 @@ public class VideoController {
     }
 
     @GetMapping(value = "/createUserChat")
-    public void createUserChat(@RequestParam String title, Model model, HttpServletRequest request){
-        model.addAllAttributes(videoService.createUserChat(title, request));
-        model.addAttribute("redirectUrl", "video/rtc/" + Objects.requireNonNull(model.getAttribute("page")).toString());
+    public String createUserChat(@RequestParam String title, @RequestParam String token, Model model){
+        model.addAllAttributes(videoService.createUserChat(title, token));
+        return "video/rtc/" + Objects.requireNonNull(model.getAttribute("page"));
     }
 
-    @GetMapping(value = "/connectUserChat")
-    public String connectUserChat(@RequestParam Long id, @RequestParam String uuid, Model model, HttpServletRequest request){
+    @GetMapping(value = "/connectUserChat/{id}/{uuid}")
+    public String connectUserChat(@PathVariable Long id, @PathVariable String uuid, Model model, HttpServletRequest request){
         model.addAllAttributes(videoService.findUserChat(id, uuid, request));
         return "video/rtc/" + Objects.requireNonNull(model.getAttribute("page")).toString();
     }

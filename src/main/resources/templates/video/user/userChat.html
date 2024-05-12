@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SNS Style List</title>
+    <title>Video Chat</title>
     <style>
         body {
             font-family: 'Noto Sans KR', sans-serif;
@@ -113,7 +113,6 @@
     </style>
 </head>
 <body>
-
 <div class="container">
     <div class="total-rooms" th:text="'총 방 개수: ' + ${count} + ' 개'"></div>
 
@@ -122,7 +121,7 @@
     <ul class="room-list">
         <li th:each="room : ${list}">
             <div class="room-item">
-                <a class="room-link" th:text="${room.name}" th:href="@{'/connectUserChat/' + ${room.id}}"></a>
+                <a class="room-link" th:text="${room.title}" th:href="@{'/connectUserChat/' + ${room.id} + '/' + ${room.uuid}}"></a>
                 <!-- 다른 방 정보를 여기에 추가할 수 있습니다. -->
             </div>
         </li>
@@ -139,61 +138,43 @@
     </div>
 </div>
 
-<script>
-// 모달 열기
-function openModal() {
-    document.getElementById('myModal').style.display = 'block';
-}
-
-// 모달 닫기
-window.onclick = function(event) {
-    var modal = document.getElementById('myModal');
-    if (event.target === modal) {
-        modal.style.display = 'none';
-    }
-};
-
-// 방 만들기
-function createRoom() {
-    var title = document.getElementById('titleInput').value;
-    if (!title) {
-        alert("방 제목을 입력하세요.");
-        return;
-    }
-    var token = localStorage.getItem('token');
-    if (!token) {
-        alert("로그인 후 이용해주세요.");
-        return;
+<script th:inline="javascript">
+    function openModal() {
+        document.getElementById('myModal').style.display = 'block';
     }
 
-    fetch('/createUserChat?title=' + encodeURIComponent(title), {
-        method: 'GET',
-        headers: {
-            'Authorization': 'Bearer ' + token
+    // 모달 닫기
+    window.onclick = function(event) {
+        var modal = document.getElementById('myModal');
+        if (event.target === modal) {
+            modal.style.display = 'none';
         }
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('방 생성에 실패했습니다.');
-        }
-        return response.text();
-    })
-    .then(redirectUrl => {
-        // 받은 URL로 페이지 이동
-        window.location.href = /*[[${redirectUrl}]]*/ '';;
-    })
-    .catch(error => {
-        console.error('오류 발생:', error);
-        alert('방 생성에 실패했습니다.');
-    });
-}
+    };
 
-function logout() {
-    localStorage.removeItem('token');
-    console.log("로그아웃 되었습니다.");
-    window.location.href = "/";
-}
+    // 방 만들기
+    function createRoom() {
+        var title = document.getElementById('titleInput').value;
+        if (!title) {
+            alert("방 제목을 입력하세요.");
+            return;
+        }
+
+        var token = localStorage.getItem('token')
+        if (!token) {
+            alert("로그인 후 이용해주세요.");
+            return;
+        }
+
+        // 헤더에 토큰 값을 넣어서 GET 요청 보내기
+        window.location.href = '/createUserChat?title=' + encodeURIComponent(title) + '&token=' + encodeURIComponent(token);
+    }
+
+    // 로그아웃
+    function logout() {
+        localStorage.removeItem('token');
+        console.log("로그아웃 되었습니다.");
+        window.location.href = "/";
+    }
 </script>
-
 </body>
 </html>

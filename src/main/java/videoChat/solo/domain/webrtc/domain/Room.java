@@ -11,7 +11,7 @@ import java.util.Objects;
 @Getter
 public class Room {
     private final Long id;
-    private String userEmail;
+    private String uuid;
     private String title;
     // sockets by user names
     private final Map<String, WebSocketSession> clients = new HashMap<>();
@@ -22,7 +22,7 @@ public class Room {
 
     public Room(Long id, UserDto dto, String title) {
         this.id = id;
-        this.userEmail = dto.getEmail();
+        this.uuid = dto.getEmail();
         this.title = title;
     }
 
