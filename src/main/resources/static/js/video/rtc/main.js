@@ -1,5 +1,5 @@
 $(function(){
-    const uuidInput = document.querySelector('input#uuid');
+    const uuidInput = document.querySelector('input#uuid') != null ? document.querySelector('input#uuid') : '';
 
     function guid() {
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
