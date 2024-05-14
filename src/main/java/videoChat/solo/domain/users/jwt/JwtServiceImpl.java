@@ -2,7 +2,6 @@ package videoChat.solo.domain.users.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AccessLevel;
@@ -39,7 +38,7 @@ public class JwtServiceImpl implements JwtService {
     private String refreshHeader;
 
     private static final String ACCESS_TOKEN_SUBJECT = "AccessToken";
-    private static final String REFRESH_TOKEN_SUBJECT = "RefreshToken";
+    private static final String REFRESH_TOKEN_SUBJECT = "RefreshTokenEntity";
     private static final String USERNAME_CLAIM = "email";
     private static final String BEARER = "Bearer ";
 
