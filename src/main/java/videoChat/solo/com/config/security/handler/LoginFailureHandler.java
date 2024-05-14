@@ -1,4 +1,4 @@
-package videoChat.solo.domain.users.handler;
+package videoChat.solo.com.config.security.handler;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

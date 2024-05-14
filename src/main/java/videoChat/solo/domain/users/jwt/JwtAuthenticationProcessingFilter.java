@@ -4,6 +4,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.hibernate.annotations.NotFound;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
@@ -13,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 import videoChat.solo.domain.users.entity.UserDetailsImpl;
 import videoChat.solo.domain.users.entity.Users;
+import videoChat.solo.domain.users.repository.RefreshTokenRepository;
 import videoChat.solo.domain.users.repository.UsersRepository;
 
 import java.io.IOException;
@@ -21,14 +23,16 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final UsersRepository usersRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
 
     private final GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();//5
 
     private final String NO_CHECK_URL = "/signIn";//1
 
-    public JwtAuthenticationProcessingFilter(JwtService jwtService, UsersRepository usersRepository) {
+    public JwtAuthenticationProcessingFilter(JwtService jwtService, UsersRepository usersRepository, RefreshTokenRepository refreshTokenRepository) {
         this.jwtService = jwtService;
         this.usersRepository = usersRepository;
+        this.refreshTokenRepository = refreshTokenRepository;
     }
 
     /**
@@ -37,7 +41,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
      * 2. 리프레시 토큰은 없고 AccessToken만 있는 경우 -> 유저정보 저장후 필터 계속 진행
      */
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         if(request.getRequestURI().equals(NO_CHECK_URL)) {
             filterChain.doFilter(request, response);
             return;//안해주면 아래로 내려가서 계속 필터를 진행하게됨
@@ -71,8 +75,6 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         filterChain.doFilter(request,response);
     }
 
-
-
     private void saveAuthentication(Users users) {
         UserDetailsImpl userDetails = new UserDetailsImpl(users);
 
@@ -84,11 +86,17 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
     }
 
     private void checkRefreshTokenAndReIssueAccessToken(HttpServletResponse response, String refreshToken) {
-        usersRepository.findByRefreshToken(refreshToken).ifPresent(
-                users -> jwtService.sendAccessToken(response, jwtService.createAccessToken(users.getEmail()))
-        );
-
-
+        refreshTokenRepository.findById(refreshToken)
+                .ifPresent(
+                        tokenEntity -> {
+                            jwtService.sendAccessToken(
+                                    response,
+                                    jwtService.createAccessToken(usersRepository.findById(tokenEntity.getMemberId()).orElseThrow().getEmail())
+                            );
+                        }
+                );
+//        usersRepository.findByRefreshToken(refreshToken).ifPresent(
+//                users -> jwtService.sendAccessToken(response, jwtService.createAccessToken(users.getEmail()))
+//        );
     }
 }
-

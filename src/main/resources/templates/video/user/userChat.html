@@ -159,14 +159,27 @@
             return;
         }
 
-        var token = localStorage.getItem('token')
+        var refresh_token = "Bearer " + localStorage.getItem('refresh_token')
+        var token = "Bearer " + localStorage.getItem('token')
         if (!token) {
             alert("로그인 후 이용해주세요.");
             return;
         }
 
-        // 헤더에 토큰 값을 넣어서 GET 요청 보내기
-        window.location.href = '/createUserChat?title=' + encodeURIComponent(title) + '&token=' + encodeURIComponent(token);
+        let formData = new FormData(); // 새로운 폼 객체 생성
+        formData.append('title', title);
+
+        fetch('/createUserChat?title=' + title, {
+            method: 'GET',
+            cache: 'no-cache',
+            headers: { 'Authorization': token
+                    , 'Authorization-refresh' : refresh_token
+            },
+        })
+        .then((data) => {
+            console.log(data);
+            window.location.href = data.url;
+        });
     }
 
     // 로그아웃

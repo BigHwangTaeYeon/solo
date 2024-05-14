@@ -83,6 +83,16 @@ public class VideoServiceImpl {
         return validationRoom(room, String.valueOf(id), email);
     }
 
+    public Map<String, Object> createUserChat(String title, HttpServletRequest request) {
+        Long id = randomValue();
+        String email = jwtService
+                        .extractEmail(jwtService.extractAccessToken(request).get())
+                        .orElseThrow(IllegalAccessError::new);
+        Room room = new Room(id, new UserDto(email), title);
+        roomService.addRoom(room);
+        return validationRoom(room, String.valueOf(id), email);
+    }
+
     public Map<String, Object> findUserChat(Long id, String uuid, HttpServletRequest request) {
         return validationRoom(
                 roomService.findRoomByStringId(String.valueOf(id)).orElse(null), String.valueOf(id), uuid

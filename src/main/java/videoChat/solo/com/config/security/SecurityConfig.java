@@ -15,12 +15,12 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import videoChat.solo.domain.users.handler.LoginFailureHandler;
-import videoChat.solo.domain.users.handler.LoginSuccessJWTProvideHandler;
+import videoChat.solo.com.config.security.handler.LoginFailureHandler;
+import videoChat.solo.com.config.security.handler.LoginSuccessJWTProvideHandler;
 import videoChat.solo.domain.users.jwt.JwtAuthenticationProcessingFilter;
 import videoChat.solo.domain.users.jwt.JwtService;
+import videoChat.solo.domain.users.repository.RefreshTokenRepository;
 import videoChat.solo.domain.users.repository.UsersRepository;
 import videoChat.solo.domain.users.service.UserDetailsServiceImpl;
 
@@ -32,17 +32,19 @@ public class SecurityConfig {
     private final ObjectMapper objectMapper;
     private final UsersRepository usersRepository;
     private final JwtService jwtService;
+    private final RefreshTokenRepository refreshTokenRepository;
 
     private final String[] allowedUrls = {
             "/", "/main", "/signIn", "/signUp", "/register", "/login", "/h2-console/**"
             , "/**"
     };
 
-    public SecurityConfig(UserDetailsServiceImpl userDetailsService, ObjectMapper objectMapper, UsersRepository usersRepository, JwtService jwtService) {
+    public SecurityConfig(UserDetailsServiceImpl userDetailsService, ObjectMapper objectMapper, UsersRepository usersRepository, JwtService jwtService, RefreshTokenRepository refreshTokenRepository) {
         this.userDetailsService = userDetailsService;
         this.objectMapper = objectMapper;
         this.usersRepository = usersRepository;
         this.jwtService = jwtService;
+        this.refreshTokenRepository = refreshTokenRepository;
     }
 
     @Bean
@@ -71,7 +73,7 @@ public class SecurityConfig {
                 )
                 .addFilterAfter(jsonUsernamePasswordLoginFilter(), LogoutFilter.class) // 추가 : 커스터마이징 된 필터를 SpringSecurityFilterChain에 등록
                 .addFilterBefore(jwtAuthenticationProcessingFilter(), JsonUsernamePasswordAuthenticationFilter.class);
-        ;
+
 
         return http.build();
     }
@@ -101,7 +103,7 @@ public class SecurityConfig {
 
     @Bean
     public LoginSuccessJWTProvideHandler loginSuccessJWTProvideHandler(){
-        return new LoginSuccessJWTProvideHandler(jwtService, usersRepository);
+        return new LoginSuccessJWTProvideHandler(jwtService, usersRepository, refreshTokenRepository);
     }
 
     @Bean
@@ -120,7 +122,7 @@ public class SecurityConfig {
 
     @Bean
     public JwtAuthenticationProcessingFilter jwtAuthenticationProcessingFilter(){
-        return new JwtAuthenticationProcessingFilter(jwtService, usersRepository);
+        return new JwtAuthenticationProcessingFilter(jwtService, usersRepository, refreshTokenRepository);
     }
 
     @Bean

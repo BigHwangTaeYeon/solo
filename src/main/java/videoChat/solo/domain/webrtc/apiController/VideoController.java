@@ -1,6 +1,7 @@
 package videoChat.solo.domain.webrtc.apiController;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.ExtendedModelMap;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -8,6 +9,7 @@ import videoChat.solo.domain.webrtc.service.VideoServiceImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 
+import java.net.URI;
 import java.util.Objects;
 
 @Controller
@@ -23,6 +25,12 @@ public class VideoController {
     
     public VideoController(final VideoServiceImpl videoService) {
         this.videoService = videoService;
+    }
+
+
+    @GetMapping(value = "/video/rtc/chat_room")
+    public String userChat(){
+        return "video/rtc/chat_room";
     }
 
     @GetMapping("/randomChat/{uuid}")
@@ -44,9 +52,10 @@ public class VideoController {
     }
 
     @GetMapping(value = "/createUserChat")
-    public String createUserChat(@RequestParam String title, @RequestParam String token, Model model){
-        model.addAllAttributes(videoService.createUserChat(title, token));
-        return BASE_PATH + getPage(model);
+    public ResponseEntity<?> createUserChat(@RequestParam String title, Model model, HttpServletRequest request){
+        model.addAllAttributes(videoService.createUserChat(title, request));
+//        return "forward:/" + BASE_PATH + getPage(model);
+        return ResponseEntity.created(URI.create(BASE_PATH + getPage(model))).build();
     }
 
     @GetMapping(value = "/connectUserChat/{id}/{uuid}")

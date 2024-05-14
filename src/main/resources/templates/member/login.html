@@ -98,7 +98,9 @@
       }).then(function(response) {
         if (response.ok) {
           var token = response.headers.get("Authorization");
+          var refresh_token = response.headers.get("Authorization-refresh");
           localStorage.setItem("token", token);
+          localStorage.setItem("refresh_token", refresh_token);
           window.location.href = "/"; // 로그인 성공 시 메인 페이지로 이동
         } else {
           alert("로그인에 실패했습니다.");

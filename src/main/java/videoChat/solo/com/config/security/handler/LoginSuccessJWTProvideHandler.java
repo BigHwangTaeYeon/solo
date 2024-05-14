@@ -1,4 +1,4 @@
-package videoChat.solo.domain.users.handler;
+package videoChat.solo.com.config.security.handler;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -7,8 +7,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+import videoChat.solo.domain.users.entity.RefreshTokenEntity;
 import videoChat.solo.domain.users.entity.UserDetailsImpl;
 import videoChat.solo.domain.users.jwt.JwtService;
+import videoChat.solo.domain.users.repository.RefreshTokenRepository;
 import videoChat.solo.domain.users.repository.UsersRepository;
 
 import java.io.IOException;
@@ -18,10 +20,12 @@ public class LoginSuccessJWTProvideHandler extends SimpleUrlAuthenticationSucces
 
     private final JwtService jwtService;
     private final UsersRepository usersRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
 
-    public LoginSuccessJWTProvideHandler(JwtService jwtService, UsersRepository usersRepository) {
+    public LoginSuccessJWTProvideHandler(JwtService jwtService, UsersRepository usersRepository, RefreshTokenRepository refreshTokenRepository) {
         this.jwtService = jwtService;
         this.usersRepository = usersRepository;
+        this.refreshTokenRepository = refreshTokenRepository;
     }
 
     @Override
@@ -32,8 +36,11 @@ public class LoginSuccessJWTProvideHandler extends SimpleUrlAuthenticationSucces
         String refreshToken = jwtService.createRefreshToken();
 
         jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
-        usersRepository.findByEmail(email).ifPresent(
-                users -> users.updateRefreshToken(refreshToken)
+        usersRepository.findByEmail(email).ifPresent(users ->
+                {
+                        users.updateRefreshToken(refreshToken);
+                        refreshTokenRepository.save(new RefreshTokenEntity(users));
+                }
         );
 
         log.info( "로그인에 성공합니다. email: {}" , email);
