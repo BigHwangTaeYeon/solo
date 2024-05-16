@@ -4,16 +4,16 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.ExtendedModelMap;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import videoChat.solo.domain.webrtc.service.VideoServiceImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 
-import java.net.URI;
+import java.util.Map;
 import java.util.Objects;
 
 @Controller
-@ControllerAdvice
 public class VideoController {
     private final VideoServiceImpl videoService;
     
@@ -25,12 +25,6 @@ public class VideoController {
     
     public VideoController(final VideoServiceImpl videoService) {
         this.videoService = videoService;
-    }
-
-
-    @GetMapping(value = "/video/rtc/chat_room")
-    public String userChat(){
-        return "video/rtc/chat_room";
     }
 
     @GetMapping("/randomChat/{uuid}")
@@ -51,11 +45,20 @@ public class VideoController {
         return "video/user/userChat";
     }
 
-    @GetMapping(value = "/createUserChat")
-    public ResponseEntity<?> createUserChat(@RequestParam String title, Model model, HttpServletRequest request){
+    @GetMapping(value = "/video/rtc/chat_room")
+    public String userChat(Model model, @RequestParam("uuid") final String uuid, @RequestParam("id") final String id){
+        model.addAttribute("uuid", uuid);
+        model.addAttribute("id", id);
+        return "video/rtc/chat_room";
+    }
+
+    @RequestMapping(value = "/createUserChat", method = {RequestMethod.GET, RequestMethod.POST})
+    public ResponseEntity<?> createUserChat(@RequestParam String title, ModelMap model, HttpServletRequest request){
+        request.setAttribute("Authorization-refresh", request.getHeader("refresh"));
         model.addAllAttributes(videoService.createUserChat(title, request));
-//        return "forward:/" + BASE_PATH + getPage(model);
-        return ResponseEntity.created(URI.create(BASE_PATH + getPage(model))).build();
+        return ResponseEntity.ok(model);
+//        return "forward:/" + BASE_PATH + getPage(model) + "?uuid=" + model.getAttribute("uuid") + "&id=" + model.getAttribute("id");
+//        return ResponseEntity.created(URI.create("redirect:/" + BASE_PATH + getPage(model))).build();
     }
 
     @GetMapping(value = "/connectUserChat/{id}/{uuid}")

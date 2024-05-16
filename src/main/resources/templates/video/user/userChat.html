@@ -111,6 +111,7 @@
             background-color: #0077cc;
         }
     </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
 <body>
 <div class="container">
@@ -169,16 +170,20 @@
         let formData = new FormData(); // 새로운 폼 객체 생성
         formData.append('title', title);
 
-        fetch('/createUserChat?title=' + title, {
-            method: 'GET',
-            cache: 'no-cache',
-            headers: { 'Authorization': token
-                    , 'Authorization-refresh' : refresh_token
+        $.ajax({
+            method: "POST",
+            url: "https://localhost:8443/createUserChat",
+            data: { 'title': title }, // 필요한 데이터를 보냅니다.
+			beforeSend : function(xhr)
+            {
+				xhr.setRequestHeader("Authorization", token);
+				xhr.setRequestHeader("refresh", refresh_token);
             },
-        })
-        .then((data) => {
-            console.log(data);
-            window.location.href = data.url;
+            success: function (response) {
+                console.log(response)
+                location.href = "video/rtc/" + response.page + "?id=" + response.id + "&uuid=" + response.uuid;
+                $('html').empty().append(response);
+            }
         });
     }
 
