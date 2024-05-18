@@ -3,7 +3,7 @@ server:
   port: 8443
   ssl:
     enabled: true
-    key-store: /Users/bighwang/Documents/workspace/solo/src/main/java/resources/solo_ssl.jks
+    key-store: classpath:solo_ssl.jks
     key-store-password: sololocalhostssl
     key-store-type: JKS
     key-alias: solo_localhost_ssl

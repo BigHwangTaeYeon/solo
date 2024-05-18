@@ -10,7 +10,7 @@ import videoChat.solo.domain.webrtc.service.VideoServiceImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 
-import java.util.Map;
+import java.net.URI;
 import java.util.Objects;
 
 @Controller
@@ -28,7 +28,7 @@ public class VideoController {
     }
 
     @GetMapping("/randomChat/{uuid}")
-    public String randomChat(Model model, @PathVariable("uuid") final String uuid) {
+    public ResponseEntity<?> randomChat(Model model, @PathVariable("uuid") final String uuid) {
         if(Math.random() * 10 + 1 > 5) {
             // create room
             model.addAllAttributes(videoService.createRandomRoom(uuid));
@@ -36,20 +36,20 @@ public class VideoController {
             // connect room | 방이 없으면 생성으로 변경
             model.addAllAttributes(videoService.connectRandomRoom(uuid));
         }
-        return BASE_PATH + getPage(model);
+        return ResponseEntity.created(URI.create(BASE_PATH + getPage(model))).build();
     }
 
     @GetMapping(value = "/userChat")
-    public String userChat(Model model){
+    public ResponseEntity<?> userChat(Model model){
         model.addAllAttributes(videoService.findUserRoom());
-        return "video/user/userChat";
+        return ResponseEntity.created(URI.create("video/user/userChat")).build();
     }
 
     @GetMapping(value = "/video/rtc/chat_room")
-    public String userChat(Model model, @RequestParam("uuid") final String uuid, @RequestParam("id") final String id){
+    public ResponseEntity<?> userChat(Model model, @RequestParam("uuid") final String uuid, @RequestParam("id") final String id){
         model.addAttribute("uuid", uuid);
         model.addAttribute("id", id);
-        return "video/rtc/chat_room";
+        return ResponseEntity.created(URI.create("video/rtc/chat_room")).build();
     }
 
     @RequestMapping(value = "/createUserChat", method = {RequestMethod.GET, RequestMethod.POST})
@@ -57,55 +57,53 @@ public class VideoController {
         request.setAttribute("Authorization-refresh", request.getHeader("refresh"));
         model.addAllAttributes(videoService.createUserChat(title, request));
         return ResponseEntity.ok(model);
-//        return "forward:/" + BASE_PATH + getPage(model) + "?uuid=" + model.getAttribute("uuid") + "&id=" + model.getAttribute("id");
-//        return ResponseEntity.created(URI.create("redirect:/" + BASE_PATH + getPage(model))).build();
     }
 
     @GetMapping(value = "/connectUserChat/{id}/{uuid}")
-    public String connectUserChat(@PathVariable Long id, @PathVariable String uuid, Model model, HttpServletRequest request){
+    public ResponseEntity<?> connectUserChat(@PathVariable Long id, @PathVariable String uuid, Model model, HttpServletRequest request){
         model.addAllAttributes(videoService.findUserChat(id, uuid, request));
-        return BASE_PATH + getPage(model);
+        return ResponseEntity.created(URI.create(BASE_PATH + getPage(model))).build();
     }
 
     @GetMapping("/video")
-    public String displayMainPage(final Long id, final String uuid) {
+    public ResponseEntity<?> displayMainPage(final Long id, final String uuid) {
         Model model = new ExtendedModelMap();
         model.addAllAttributes(videoService.displayMainPage(id, uuid));
-        return BASE_PATH + getPage(model);
+        return ResponseEntity.created(URI.create(BASE_PATH + getPage(model))).build();
     }
 
     @PostMapping(value = "/room", params = "action=create")
-    public String processRoomSelection(
+    public ResponseEntity<?> processRoomSelection(
             Model model, @ModelAttribute("id") final String sid, @ModelAttribute("uuid") final String uuid, final BindingResult binding) {
         model.addAllAttributes(videoService.processRoomSelection(sid, uuid, binding));
-        return BASE_PATH + getPage(model);
+        return ResponseEntity.created(URI.create(BASE_PATH + getPage(model))).build();
     }
 
     @GetMapping("/room/{sid}/user/{uuid}")
-    public String displaySelectedRoom(Model model, @PathVariable("sid") final String sid, @PathVariable("uuid") final String uuid) {
+    public ResponseEntity<?> displaySelectedRoom(Model model, @PathVariable("sid") final String sid, @PathVariable("uuid") final String uuid) {
         model.addAllAttributes(videoService.displaySelectedRoom(sid, uuid));
-        return BASE_PATH + getPage(model);
+        return ResponseEntity.created(URI.create(BASE_PATH + getPage(model))).build();
     }
 
     @GetMapping("/room/{sid}/user/{uuid}/exit")
-    public String processRoomExit(Model model, @PathVariable("sid") final String sid, @PathVariable("uuid") final String uuid) {
+    public ResponseEntity<?> processRoomExit(Model model, @PathVariable("sid") final String sid, @PathVariable("uuid") final String uuid) {
         model.addAllAttributes(videoService.processRoomExit(sid, uuid));
-        return getPage(model);
+        return ResponseEntity.created(URI.create(getPage(model))).build();
     }
 
     @GetMapping("/room/random")
-    public String requestRandomRoomNumber(Model model, @ModelAttribute("uuid") final String uuid) {
+    public ResponseEntity<?> requestRandomRoomNumber(Model model, @ModelAttribute("uuid") final String uuid) {
         model.addAllAttributes(videoService.requestRandomRoomNumber(uuid));
-        return BASE_PATH + getPage(model);
+        return ResponseEntity.created(URI.create(BASE_PATH + getPage(model))).build();
     }
 
     @GetMapping("/offer")
-    public String displaySampleSdpOffer() {
-        return BASE_PATH + "/sdp_offer";
+    public ResponseEntity<?> displaySampleSdpOffer() {
+        return ResponseEntity.created(URI.create(BASE_PATH + "/sdp_offer")).build();
     }
 
     @GetMapping("/stream")
-    public String displaySampleStreaming() {
-        return BASE_PATH + "/streaming";
+    public ResponseEntity<?> displaySampleStreaming() {
+        return ResponseEntity.created(URI.create(BASE_PATH + "/streaming")).build();
     }
 }
