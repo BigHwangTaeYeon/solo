@@ -1,0 +1,12 @@
+다른 마이크로 서비스 API 호출 시 오류
+sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
+
+Https 를 사용하는 웹사이트에 연결을 시도할 때 Java 에서 신뢰하는 인증서 목록에 해당 웹사이트의 인증서가 존재하지 않아서 발생하는 문제라고 한다.
+즉, Java 에서 신뢰하는 인증서 목록에 해당 웹사이트의 인증서를 추가해주면 문제가 해결된다.
+
+
+
+
+
+
+

@@ -1,0 +1,182 @@
+#spring.application.name=Gateway
+
+server:
+  port: 443
+  ssl:
+    enabled: true
+    key-store: classpath:solo_ssl.jks
+    key-store-password: sololocalhostssl
+    key-store-type: JKS
+    key-alias: solo_localhost_ssl
+  http:
+    port: 80
+
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+spring:
+  application:
+    name: apiGateway
+
+  cloud:
+    gateway:
+      default-filters:
+        - name: GlobalFilter #??? ??? ??? ??
+          args:
+            baseMessage: Spring Cloud Gateway Global Filter #??? ??? ??? ?? baseMessaege ?????? ??? ?? ??
+            preLogger: true
+            postLogger: true
+
+      routes:
+        - id: member-service
+          uri: lb://MY-MEMBER-SERVICE
+          predicates:
+            - Path=/member-service/index
+            - Method=GET
+          filters:
+#            - RemoveRequestHeader=Cookie #post? ???? ???? ?? ??? ???? ??? ????? ?? ??
+            - RewritePath=/member-service/(?<segment>.*), /$\{segment}
+
+        - id: member-service
+          uri: lb://MY-MEMBER-SERVICE
+          predicates:
+            - Path=/member-service/login
+            - Method=GET
+          filters:
+#            - RemoveRequestHeader=Cookie #post? ???? ???? ?? ??? ???? ??? ????? ?? ??
+            - RewritePath=/member-service/(?<segment>.*), /$\{segment}
+            #/user-service/(?<segment>.*) ???? ???? ????   /$\{segment} ??? ????
+            #??? ?????? ??? controller? RequestMapping(user-service) ????
+
+        - id: member-service
+          uri: lb://MY-MEMBER-SERVICE
+          predicates:
+            - Path=/member-service/signUp
+            - Method=POST
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/member-service/(?<segment>.*), /$\{segment}
+
+        - id: member-service
+          uri: lb://MY-MEMBER-SERVICE
+          predicates:
+            - Path=/member-service/getEmail
+            - Method=POST
+          filters:
+            - RewritePath=/member-service/(?<segment>.*), /$\{segment}
+
+        #need authorization
+#        - id: member-service
+#          uri: lb://MY-MEMBER-SERVICE
+#          predicates:
+#            - Path=/user-service/**
+#            - Method=GET
+#          filters:
+#            - RemoveRequestHeader=Cookie
+#            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+#            - AuthorizationHeaderFilter # write class name to add filter!!!!!!!!!!!!
+
+        - id: member-service
+#          uri: http://localhost:8081/
+          uri: lb://MY-MEMBER-SERVICE
+          predicates:
+            - Path=/member-service/**
+          filters:
+            - RemoveRequestHeader=Cookie #post? ???? ???? ?? ??? ???? ??? ????? ?? ??
+            - RewritePath=/member-service/(?<segment>.*), /$\{segment}
+            - CustomFilter #??? ??? ??? ??? ??
+
+
+
+
+
+
+
+
+        - id: video-service
+          uri: lb://MY-VIDEO-SERVICE
+          predicates:
+            - Path=/video-service/randomChat/**
+            - Method=GET
+          filters:
+            - RewritePath=/video-service/(?<segment>.*), /$\{segment}
+
+        - id: video-service
+          uri: lb://MY-VIDEO-SERVICE
+          predicates:
+            - Path=/video-service/userChat
+            - Method=GET
+          filters:
+            - RewritePath=/video-service/(?<segment>.*), /$\{segment}
+
+        - id: video-service
+          uri: lb://MY-VIDEO-SERVICE
+          predicates:
+            - Path=/video-service/video/rtc/chat_room
+            - Method=GET
+          filters:
+            - RewritePath=/video-service/(?<segment>.*), /$\{segment}
+
+        - id: video-service
+          uri: lb://MY-VIDEO-SERVICE
+          predicates:
+            - Path=/video-service/createUserChat
+            - Method=GET,POST
+          filters:
+            - AuthorizationHeaderFilter
+            - RewritePath=/video-service/(?<segment>.*), /$\{segment}
+
+        - id: video-service
+          uri: lb://MY-VIDEO-SERVICE
+          predicates:
+            - Path=/video-service/**
+          filters:
+            - RewritePath=/video-service/(?<segment>.*), /$\{segment}
+            - CustomFilter #??? ??? ??? ??? ??
+
+
+
+
+
+
+        - id: first-service
+#          uri: http://localhost:8081/
+          uri: lb://MY-FIRST-SERVICE
+          predicates:
+            - Path=/first-service/**
+          filters:
+            - AddRequestHeader=first-request, first-reqeust-header2
+            - AddResponseHeader=first-request, first-response-header2
+            - CustomFilter #??? ??? ??? ??? ??
+
+        - id: second-service
+#          uri: http://localhost:8082/
+          uri: lb://MY-SECOND-SERVICE
+          predicates:
+            - Path=/second-service/**
+          filters:
+            #            - AddRequestHeader=second-request, second-reqeust-header2
+            #            - AddResponseHeader=second-request, second-response-header2
+            - name: CustomFilter
+            - name: LoggingFilter
+              args:
+                baseMessage: Logging, filter.
+                preLogger: true
+                postLogger: true
+
+
+
+
+jwt:
+  secret: 63fba97a41e0d004e10e8dbbcb9a547819280efb00a54c732aca36a8a58258e4fcc539ffc5159a7f0a7be78b86efe001c12ba6af6debeb0a89e8ce7e82e75455
+  access:
+    expiration: 300
+    header: Authorization
+  refresh:
+    expiration: 300
+    header: Authorization-refresh

@@ -1,0 +1,4 @@
+/**
+ * gatway client → gateway handler → globla filter →
+ * customfilter → logginfilter → proixed service (우리가 구현한 firts, second service같은것) 응답은 이거 반대 순서로 감
+ */
