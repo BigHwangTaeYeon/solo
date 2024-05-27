@@ -8,7 +8,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import solo.member_service.member.entity.RefreshTokenEntity;
-import solo.member_service.member.entity.UserDetailsImpl;
+import solo.member_service.member.dto.UserDetailsImpl;
 import solo.member_service.member.jwt.JwtService;
 import solo.member_service.member.repository.RefreshTokenRepository;
 import solo.member_service.member.repository.UsersRepository;

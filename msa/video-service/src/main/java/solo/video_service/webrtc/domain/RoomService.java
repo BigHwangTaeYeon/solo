@@ -3,7 +3,7 @@ package solo.video_service.webrtc.domain;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.WebSocketSession;
-import solo.video_service.webrtc.util.Parser;
+import solo.video_service.util.Parser;
 
 import java.util.*;
 import java.util.stream.Collectors;

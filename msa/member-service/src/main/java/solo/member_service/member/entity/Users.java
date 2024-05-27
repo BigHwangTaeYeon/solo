@@ -12,7 +12,6 @@ import java.time.LocalDate;
 
 @Entity
 @Getter
-//@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Users {
 
@@ -51,7 +50,6 @@ public class Users {
         this.refreshToken = null;
     }
 
-    //== 패스워드 암호화 ==//
     public void encodePassword(PasswordEncoder passwordEncoder){
         this.password = "{bcrypt}" + passwordEncoder.encode(password);
     }

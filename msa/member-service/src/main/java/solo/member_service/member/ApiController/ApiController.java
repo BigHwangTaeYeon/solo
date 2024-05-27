@@ -30,9 +30,4 @@ public class ApiController {
         userDetailsService.save(userDto);
         return ResponseEntity.ok(userDto);
     }
-
-    @PostMapping(value = "/getEmail")
-    public ResponseEntity<?> getEmail(HttpServletRequest request){
-        return ResponseEntity.ok(userDetailsService.emailByToken(request.getHeader(HttpHeaders.AUTHORIZATION)));
-    }
 }

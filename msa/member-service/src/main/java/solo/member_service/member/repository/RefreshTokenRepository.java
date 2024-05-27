@@ -9,7 +9,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
-//Redis Template 에서는 Repository 를 인터페이스로 정의하지 않고, 직접 아래와 같이 구현한다.
 @Repository
 public class RefreshTokenRepository {
 

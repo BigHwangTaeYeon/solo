@@ -1,4 +1,4 @@
-package solo.video_service.webrtc.util;
+package solo.video_service.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

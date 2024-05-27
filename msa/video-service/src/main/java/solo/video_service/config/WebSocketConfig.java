@@ -1,4 +1,4 @@
-package solo.video_service.webrtc.config;
+package solo.video_service.config;
 
 //import io.github.benkoff.webrtcss.socket.SignalHandler;
 
@@ -25,11 +25,4 @@ public class WebSocketConfig implements WebSocketConfigurer {
         return new SignalHandlerSocket();
     }
 
-//    @Bean
-//    public ServletServerContainerFactoryBean createWebSocketContainer() {
-//        ServletServerContainerFactoryBean container = new ServletServerContainerFactoryBean();
-//        container.setMaxTextMessageBufferSize(8192);
-//        container.setMaxBinaryMessageBufferSize(8192);
-//        return container;
-//    }
 }

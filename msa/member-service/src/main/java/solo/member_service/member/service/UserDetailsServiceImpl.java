@@ -6,7 +6,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import solo.member_service.member.dto.UserDto;
-import solo.member_service.member.entity.UserDetailsImpl;
+import solo.member_service.member.dto.UserDetailsImpl;
 import solo.member_service.member.entity.Users;
 import solo.member_service.member.jwt.JwtServiceImpl;
 import solo.member_service.member.repository.UsersRepository;
@@ -35,10 +35,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                             throw new IllegalArgumentException("비밀번호가 다릅니다.");
                         }
                 );
-    }
-
-    public String emailByToken(String token) throws UsernameNotFoundException {
-        return jwtService.extractEmail(token).orElseThrow(() -> new IllegalArgumentException("no token"));
     }
 
     @Override

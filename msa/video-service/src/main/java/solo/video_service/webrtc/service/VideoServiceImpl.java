@@ -3,17 +3,13 @@ package solo.video_service.webrtc.service;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.client.RestTemplate;
 import solo.video_service.webrtc.domain.Room;
 import solo.video_service.webrtc.domain.RoomService;
-import solo.video_service.webrtc.util.Parser;
+import solo.video_service.util.Parser;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,12 +26,9 @@ public class VideoServiceImpl {
     private final RoomService roomService;
     private final Parser parser;
 
-    private final RestTemplate restTemplate;
-
-    public VideoServiceImpl(RoomService roomService, Parser parser, RestTemplate restTemplate) {
+    public VideoServiceImpl(RoomService roomService, Parser parser) {
         this.roomService = roomService;
         this.parser = parser;
-        this.restTemplate = restTemplate;
     }
 
     public Map<String, Object> displayMainPage(final Long id, final String uuid) {
@@ -81,10 +74,10 @@ public class VideoServiceImpl {
 
     public Map<String, Object> createUserChat(String title, HttpServletRequest request) {
         Long id = randomValue();
-        String email = getEmail(request);
-        Room room = new Room(id, email, title);
+        String uuid = request.getHeader(HttpHeaders.AUTHORIZATION);
+        Room room = new Room(id, uuid, title);
         roomService.addRoom(room);
-        return validationRoom(room, String.valueOf(id), email);
+        return validationRoom(room, String.valueOf(id), uuid);
     }
 
     public Map<String, Object> findUserChat(Long id, String uuid, HttpServletRequest request) {
@@ -143,12 +136,4 @@ public class VideoServiceImpl {
         return result;
     }
 
-    private String getEmail(HttpServletRequest request){
-        String url = "https://127.0.0.1:443/member-service/getEmail";
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.AUTHORIZATION, request.getHeader(HttpHeaders.AUTHORIZATION));
-        HttpEntity<?> entity = new HttpEntity<>(headers);
-        ResponseEntity<String> email = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
-        return email.getBody();
-    }
 }

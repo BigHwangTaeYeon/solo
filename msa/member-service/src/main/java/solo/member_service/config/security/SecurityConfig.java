@@ -35,8 +35,8 @@ public class SecurityConfig {
     private final RefreshTokenRepository refreshTokenRepository;
 
     private final String[] allowedUrls = {
-            "/", "/main", "/signIn", "/signUp", "/register", "/login", "/h2-console/**"
-            , "/**"
+//            "/", "/main", "/signIn", "/signUp", "/register", "/login", "/h2-console/**", "/**"
+            "/signIn", "/signUp", "/register", "/login"
     };
 
     public SecurityConfig(UserDetailsServiceImpl userDetailsService, ObjectMapper objectMapper, UsersRepository usersRepository, JwtService jwtService, RefreshTokenRepository refreshTokenRepository) {

@@ -1,4 +1,4 @@
-package solo.video_service.webrtc.apiController;
+package solo.video_service.webrtc.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;

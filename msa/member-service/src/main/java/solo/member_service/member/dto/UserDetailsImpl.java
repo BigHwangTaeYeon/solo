@@ -1,7 +1,8 @@
-package solo.member_service.member.entity;
+package solo.member_service.member.dto;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import solo.member_service.member.entity.Users;
 
 import java.util.Collection;
 import java.util.List;
