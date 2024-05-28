@@ -1,1 +1,0 @@
-클라이언트 호출 → api gateway → eureka server → 서버 확인 → api gateway → 해당서버로 이동
