@@ -21,7 +21,7 @@ services:
     environment: # spring app 설정
       SPRING_DATASOURCE_URL: jdbc:h2:tcp://h2:1521/solo # h2 db url
       SPRING_DATASOURCE_USERNAME: sa # h2 db id
-      SPRING_DATASOURCE_PASSWORD: # h2 db password
+      SPRING_DATASOURCE_PASSWORD: # h2 db passwordz
       SPRING_JPA_HIBERNATE_DDL_AUTO: create # DDL 자동 생성
     depends_on: # app 서비스 시작 전 실행되어야 하는 서비스
       - db

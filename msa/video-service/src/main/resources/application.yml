@@ -29,6 +29,7 @@ eureka:
 #      defaultZone: http://127.0.0.1:8761/eureka
       defaultZone: http://host.docker.internal:8761/eureka
   instance:
+    preferIpAddress: true
     instance-id: ${spring.application.name}:${spring.application.instance-id:${random.value}}
 
 greeting:

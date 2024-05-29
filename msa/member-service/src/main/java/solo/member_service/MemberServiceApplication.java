@@ -2,9 +2,16 @@ package solo.member_service;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
 @SpringBootApplication
-public class MemberServiceApplication {
+public class MemberServiceApplication extends SpringBootServletInitializer {
+
+	@Override
+	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+		return application.sources(MemberServiceApplication.class);
+	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(MemberServiceApplication.class, args);

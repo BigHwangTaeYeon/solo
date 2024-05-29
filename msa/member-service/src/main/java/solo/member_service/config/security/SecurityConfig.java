@@ -4,18 +4,23 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
+import org.springframework.security.web.util.matcher.IpAddressMatcher;
 import solo.member_service.config.security.handler.LoginFailureHandler;
 import solo.member_service.config.security.handler.LoginSuccessJWTProvideHandler;
 import solo.member_service.member.jwt.JwtAuthenticationProcessingFilter;
@@ -23,6 +28,8 @@ import solo.member_service.member.jwt.JwtService;
 import solo.member_service.member.repository.RefreshTokenRepository;
 import solo.member_service.member.repository.UsersRepository;
 import solo.member_service.member.service.UserDetailsServiceImpl;
+
+import java.util.function.Supplier;
 
 @Configuration
 //@EnableWebSecurity
@@ -33,6 +40,22 @@ public class SecurityConfig {
     private final UsersRepository usersRepository;
     private final JwtService jwtService;
     private final RefreshTokenRepository refreshTokenRepository;
+
+    IpAddressMatcher hasIpAddress1 = new IpAddressMatcher(CONFIG);
+    IpAddressMatcher hasIpAddress2 = new IpAddressMatcher(MEMBER);
+    IpAddressMatcher hasIpAddress3 = new IpAddressMatcher(VIDEO);
+    IpAddressMatcher hasIpAddress4 = new IpAddressMatcher(GATEWAY);
+    IpAddressMatcher hasIpAddress5 = new IpAddressMatcher(NETWORK);
+    IpAddressMatcher hasIpAddress6 = new IpAddressMatcher(NETWORK_GATEWAY);
+
+    public static final String CONFIG = "172.19.0.2";
+    public static final String MEMBER = "172.19.0.3";
+    public static final String VIDEO = "172.19.0.4";
+    public static final String GATEWAY = "172.19.0.5";
+    public static final String NETWORK = "172.19.0.0";
+    public static final String NETWORK_GATEWAY = "172.19.0.1";
+    public static final String SUBNET = "/16";
+    public static final IpAddressMatcher ALLOWED_IP_ADDRESS_MATCHER = new IpAddressMatcher(CONFIG + SUBNET);
 
     private final String[] allowedUrls = {
 //            "/", "/main", "/signIn", "/signUp", "/register", "/login", "/h2-console/**", "/**"
@@ -56,8 +79,11 @@ public class SecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorizeRequest ->
                         authorizeRequest
-                                .requestMatchers(allowedUrls).permitAll() // 접근 제한 해제
-                                .anyRequest().authenticated()
+                                .requestMatchers(allowedUrls)
+                                .access((authentication, context) -> new AuthorizationDecision(hasIpAddress2.matches(context.getRequest())))
+//                                .access(hasIpAddress(this::hasIpAddress))
+//                                .permitAll() // 접근 제한 해제
+                                .anyRequest().permitAll()
                 )
                 .logout((logout) -> logout
                         .logoutSuccessUrl("/signIn")
